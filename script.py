@@ -5,11 +5,12 @@
 ### Copyright libremente - GPLv3 - Feel free!                ###
 ################################################################
 '''
-from Tkinter import Tk, X, LEFT, IntVar
-from ttk import Frame, Label, Entry, Button, Checkbutton
-import tkMessageBox
+from tkinter import Tk, X, LEFT, IntVar
+from tkinter import Frame, Label, Entry, Button, Checkbutton, messagebox
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.keys import Keys 
+
 import time
 
 
@@ -32,7 +33,7 @@ def launch_driver(user, pwd, checkedValue):
     click_plus(driver)
 
     # Print message and bye
-    tkMessageBox.showinfo("Well Done!", "Thanks and see you in class ;)")
+    messagebox.showinfo("Well Done!", "From surF with love ;)")
 
 
 def click_plus(driver):
@@ -47,10 +48,10 @@ def click_plus(driver):
                 elements = driver.find_elements_by_class_name('button-secondary-medium-round')
                 # Eventually push the button!
                 for el in elements:
-                    print(el)
-                    # el.click()
+                    el.click()
             except NoSuchElementException:
                 pass
+                # Everywhere you go, everything you say, in TPI you gotta scream my name! Thesurfa!
 
 
 def click_friends(driver):
@@ -62,9 +63,16 @@ def click_friends(driver):
             driver.get(line)
             time.sleep(5)
             try:
+                # First click on "Collegati"
                 connect = driver.find_element_by_class_name('pv-s-profile-actions--connect')
-                print(connect)
-            except NoSuchElementException:
+                connect.click()
+                time.sleep(2)
+                # Then click on "ok"
+                alert = driver.find_element_by_css_selector('.send-invite__actions > .button-primary-large')
+                alert.click()
+                time.sleep(1)
+            except Exception as e:
+                print(e)
                 pass
 
 
@@ -75,7 +83,7 @@ def retrieve_input(checkedValue):
     pwd = pwdEntry.get()
 
     if not user or not pwd:
-        tkMessageBox.showinfo("Errore", "User or Pwd not correctly inserted")
+        messagebox.showinfo("Errore", "User or Pwd not correctly inserted")
 
     launch_driver(user, pwd, checkedValue)
 
@@ -104,7 +112,7 @@ frame2.pack(fill=X)
 pwdLabel = Label(frame2, text="Password", width=20)
 pwdLabel.pack(side=LEFT, padx=5, pady=5)
 
-pwdEntry = Entry(frame2)
+pwdEntry = Entry(frame2, show="*")
 pwdEntry.pack(fill=X, padx=5, expand=True)
 
 checkValue = IntVar()
