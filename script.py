@@ -9,12 +9,10 @@ from tkinter import Tk, X, LEFT, IntVar
 from tkinter import Frame, Label, Entry, Button, Checkbutton, messagebox
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.keys import Keys 
-
 import time
 
 
-def launch_driver(user, pwd, checkedValue):
+def launch_driver(user, pwd, checked_value):
     ''' Open webdriver '''
     driver = webdriver.Firefox()
     driver.get("https://www.linkedin.com/?trk=nav_header_logo")
@@ -27,7 +25,7 @@ def launch_driver(user, pwd, checkedValue):
     driver.find_element_by_id('login-submit').click()
 
     # If we want to add everyone to the friends list, then call the function
-    if checkedValue == 1:
+    if checked_value == 1:
         click_friends(driver)
     # Eventually, call the function for pushing the button
     click_plus(driver)
@@ -47,8 +45,9 @@ def click_plus(driver):
             try:
                 elements = driver.find_elements_by_class_name('button-secondary-medium-round')
                 # Eventually push the button!
-                for el in elements:
-                    el.click()
+                for element in elements:
+                    element.click()
+                    time.sleep(2)
             except NoSuchElementException:
                 pass
                 # Everywhere you go, everything you say, in TPI you gotta scream my name! Thesurfa!
@@ -71,13 +70,12 @@ def click_friends(driver):
                 alert = driver.find_element_by_css_selector('.send-invite__actions > .button-primary-large')
                 alert.click()
                 time.sleep(1)
-            except Exception as e:
-                print(e)
+            except:
                 pass
 
 
 # Retrieve input fun
-def retrieve_input(checkedValue):
+def retrieve_input(checked_value):
     ''' Retrieve the values inserted by the tkInter interface '''
     user = usernameEntry.get()
     pwd = pwdEntry.get()
@@ -85,7 +83,7 @@ def retrieve_input(checkedValue):
     if not user or not pwd:
         messagebox.showinfo("Errore", "User or Pwd not correctly inserted")
 
-    launch_driver(user, pwd, checkedValue)
+    launch_driver(user, pwd, checked_value)
 
 
 ''' Main script'''
@@ -119,7 +117,7 @@ checkValue = IntVar()
 checkButton = Checkbutton(top, text="Tutti Amici!", onvalue=1, offvalue=0, variable=checkValue)
 checkButton.pack()
 
-submitButton = Button(text="Run Fast!", command=lambda: retrieve_input(checkValue.get()))
+submitButton = Button(text="Run Forrest Run!", command=lambda: retrieve_input(checkValue.get()))
 submitButton.pack()
 
 # Main loop
